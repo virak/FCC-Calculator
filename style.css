@@ -1,0 +1,44 @@
+#pageTitle{
+    color: cadetblue;
+    text-decoration: none;
+    text-align: center;
+    text-transform: uppercase;
+    margin: 15px;
+}
+
+.titleContainer{
+    width: 100%;
+    border-bottom: 1px solid cadetblue;
+    margin-bottom: 15px;
+}
+
+.btn{
+    margin-right: 5px;
+    margin-left: 5px;
+    width: 100%;
+}
+
+.singleButtonContainer{
+    float: left;
+    width: 20%;
+    padding: 5px;
+}
+.doubleButtonContainer{
+    float: left;
+    width: 40%;
+    padding: 5px;
+}
+
+.inputContainer{
+    width: 100%;
+    text-align: right;
+    border-bottom: 1px solid blue;
+    margin: 5px;
+}
+
+#display{
+    text-align: right;
+    background: grey;
+    color: white;
+    margin: 5px;
+}

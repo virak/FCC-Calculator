@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="style.css">
+
+    <title>Calculator</title>
+    <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.6/marked.js"></script>
+
+    <!-- Don't use this in production: -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+
+<body>
+    <div id="app"></div>
+
+    <script type="text/babel">
+    // ================================================================
+    class App extends React.Component{
+        
+        canUseDecimal = true
+        replacePreviousOperator = false
+
+        constructor(props){
+            super(props)
+            this.state = {
+                display : '0',
+                input: ''
+            }
+
+            this.handleEqualClick = this.handleEqualClick.bind(this)
+            this.handleNumberClick = this.handleNumberClick.bind(this)
+            this.handleOperatorClick = this.handleOperatorClick.bind(this)
+            this.handleDecimalClick = this.handleDecimalClick.bind(this)
+            this.handleClearClick = this.handleClearClick.bind(this)
+
+        }
+
+        handleEqualClick(e){
+            let total = 0
+            let currentCalculation = this.state.display
+            this.replacePreviousOperator = false
+
+            total = eval(currentCalculation)
+
+            this.setState({ display: total, input: total })
+        }
+        handleNumberClick(e){
+            let currentDisplay = this.state.display
+            let currentInput = this.state.input
+            this.replacePreviousOperator = false
+            if(currentDisplay === '0'){
+                currentDisplay = e.target.value.toString(10)
+                currentInput = e.target.value.toString(10)
+            }else{
+                currentDisplay += e.target.value.toString(10)
+                currentInput += e.target.value.toString(10)
+            }
+            this.setState({
+                display : currentDisplay,
+                input : currentInput
+            })
+        }
+        handleOperatorClick(e){
+            if(this.replacePreviousOperator === false ){
+                let currentDisplay = this.state.display
+                let currentInput = this.state.input
+                currentDisplay += ' '+e.target.value.toString(10)+' '
+                currentInput += ' '+e.target.value.toString(10)+' '
+                this.canUseDecimal = true
+                this.replacePreviousOperator = true
+                this.setState({ display : currentDisplay, input: currentInput})
+            }else{
+                let currentDisplay = this.state.display
+                let currentInput = this.state.input
+                if(e.target.value == "-"){
+                    currentDisplay += e.target.value.toString(10)
+                    currentInput += e.target.value.toString(10)
+                    this.canUseDecimal = true
+                }else{
+                    currentDisplay = currentDisplay.substring(0, currentDisplay.length-3) + ' '+e.target.value.toString(10)+' '
+                    currentInput = currentInput.substring(0, currentInput.length-3) + ' '+e.target.value.toString(10)+' '
+                    this.canUseDecimal = true
+                }
+                this.setState({ display : currentDisplay, input: currentInput})
+            }
+            
+        }
+        handleDecimalClick(e){
+            if(this.canUseDecimal){
+                let currentDisplay = this.state.display
+                let currentInput = this.state.input
+                currentDisplay += e.target.value.toString(10)
+                currentInput += e.target.value.toString(10)
+                this.canUseDecimal = false
+                this.replacePreviousOperator = false
+                this.setState({ 
+                    display : currentDisplay, 
+                    input : currentInput, 
+                })
+            }
+        }
+        handleClearClick(e){
+            this.canUseDecimal = true
+            this.replacePreviousOperator = false
+            this.setState({
+                display: '0',
+                input: '',
+            })
+        }
+
+        render(){
+            return(
+                <div className="container">
+                    <div className="titleContainer">
+                        <h1 id="pageTitle">My Calculator</h1>
+                    </div>
+
+                    <div className="row">
+                        <div className="col-6">
+                            <div className="singleButtonContainer">
+                                <button className="btn btn-secondary" id="seven" onClick={this.handleNumberClick} value="7">7</button>
+                            </div>
+                            <div className="singleButtonContainer">
+                                <button className="btn btn-secondary" id="eight" onClick={this.handleNumberClick} value="8">8</button>
+                            </div>
+                            <div className="singleButtonContainer">
+                                <button className="btn btn-secondary" id="nine" onClick={this.handleNumberClick} value="9">9</button>
+                            </div>
+                            <div className="doubleButtonContainer">
+                                <button className="btn btn-primary" id="clear" onClick={this.handleClearClick}>AC</button>
+                            </div>
+
+                            
+                            <div className="singleButtonContainer">
+                                <button className="btn btn-secondary" id="four" onClick={this.handleNumberClick} value="4">4</button>
+                            </div>
+                            <div className="singleButtonContainer">
+                                <button className="btn btn-secondary" id="five" onClick={this.handleNumberClick} value="5">5</button>
+                            </div>
+                            <div className="singleButtonContainer">
+                                <button className="btn btn-secondary" id="six" onClick={this.handleNumberClick} value="6">6</button>
+                            </div>
+                            <div className="singleButtonContainer">
+                                <button className="btn btn-primary" id="subtract" onClick={this.handleOperatorClick} value="-">-</button>
+                            </div>
+                            <div className="singleButtonContainer">
+                                <button className="btn btn-primary" id="divide" onClick={this.handleOperatorClick} value="/">/</button>
+                            </div>
+
+
+                            <div className="singleButtonContainer">
+                                <button className="btn btn-secondary" id="one" onClick={this.handleNumberClick} value="1">1</button>
+                            </div>
+                            <div className="singleButtonContainer">
+                                <button className="btn btn-secondary" id="two" onClick={this.handleNumberClick} value="2">2</button>
+                            </div>
+                            <div className="singleButtonContainer">
+                                <button className="btn btn-secondary" id="three" onClick={this.handleNumberClick} value="3">3</button>
+                            </div>
+                            <div className="singleButtonContainer">
+                                <button className="btn btn-primary" id="add" onClick={this.handleOperatorClick} value="+">+</button>
+                            </div>
+                            <div className="singleButtonContainer">
+                                <button className="btn btn-primary" id="multiply" onClick={this.handleOperatorClick} value="*">x</button>
+                            </div>
+                                
+                                
+                            <div className="doubleButtonContainer">
+                                <button className="btn btn-secondary" id="zero" onClick={this.handleNumberClick} value="0">0</button>
+                            </div>
+                            <div className="singleButtonContainer">
+                                <button className="btn btn-secondary" id="decimal" onClick={this.handleDecimalClick} value=".">.</button>
+                            </div>
+                            <div className="doubleButtonContainer">
+                                <button className="btn btn-primary" id="equals" onClick={this.handleEqualClick}>=</button>
+                            </div>
+                        </div>
+                        <div className="col-6">
+                            <div id="input" className="inputContainer">{this.state.input}</div>
+                            <div id="display">
+                                {this.state.display}    
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )
+        }
+    }
+    // ================================================================
+    ReactDOM.render(<App />, document.getElementById('app'));
+
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
+    </script>
+    <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous">
+    </script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
+    </script>
+    <script src="https://cdn.freecodecamp.org/testable-projects-fcc/v1/bundle.js"></script>
+</body>
+
+</html>
